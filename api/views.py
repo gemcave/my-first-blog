@@ -7,7 +7,7 @@ from api.serializers import OrderSerializer
 
 
 @api_view(['GET', 'POST'])
-def task_list(request):
+def order_list(request):
     """
     List all tasks, or create a new task.
     """
@@ -27,7 +27,7 @@ def task_list(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def task_detail(request, pk):
+def order_detail(request, pk):
     """
     Get, udpate, or delete a specific task
     """
