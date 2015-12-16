@@ -6,6 +6,7 @@ class Order(models.Model):
     author = models.ForeignKey('auth.User')
     textDep = models.TextField()
     textDest = models.TextField()
+    truckType = models.CharField(max_length = 35, default = 'Грузовик1')
     created_date = models.DateTimeField(
             default=timezone.now)
 
@@ -13,4 +14,4 @@ class Order(models.Model):
         self.save()
 
     def __str__(self):
-        return self.textDest+" "+self.textDep
+        return "Пункт назначения: "+self.textDest+" Пункт отправления: "+self.textDep
