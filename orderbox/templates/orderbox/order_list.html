@@ -2,8 +2,8 @@
   {% block content %}
         {% for post in posts %}
             <div class="post">
-                <h1><a href="{% url 'order_detail' pk=post.pk %}">Пункт отправления:<br/>
-                <div class="post_detail">{{ post.textDep}}<div/><br/>Пункт назначения:<br/><div class="post_detail">{{ post.textDest}}<div/></a></h1>
+                <h1><a href="{% url 'order_detail' pk=post.pk %}">Пункт отправления<br/>
+                <div class="post_detail">{{ post.textDep}}<div/><br/>Пункт назначения<br/><div class="post_detail">{{ post.textDest}}<div/></a></h1>
                 <p>{{ post.truckType|linebreaks }}</p>
                 <div class="date">
                     {{ post.created_date }}

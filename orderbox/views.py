@@ -1,15 +1,32 @@
 from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import render
+
+#Auth
+from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect
+from django.contrib import auth
+from django.core.context_processors import csrf
+
 from .models import Order
 from .serializers import OrderSerializer
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
 from .forms import OrderForm
 from django.shortcuts import redirect
+from mysite.permissions import IsOwnerOrReadOnly
 
-class OrderViewSet(ModelViewSet):
-	queryset = Order.objects.all()
-	serializer_class = OrderSerializer
+class OrderMixin(object):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
+
+    def pre_save(self, obj):
+        obj.owner = self.request.user
+
+class OrderViewSet(OrderMixin, ModelViewSet):
+	pass
+	# queryset = Order.objects.all()
+	# serializer_class = OrderSerializer
 
 def order_list(request):
     orders_posts = Order.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
@@ -45,9 +62,32 @@ def order_edit(request, pk):
         else:
             form = OrderForm(instance=post)
         return render(request, 'orderbox/order_edit.html', {'form': form})
-#Для фильтрации запросов
+def login(request):
+	c = {}
+	c.update(csrf(request))
+	return render_to_response('orderbox/login.html', c)
+def auth_view(request):
+	username = request.POST.get('username', '')
+	password = request.POST.get('password', '')
+	user = auth.authenticate(username=username, password=password)
+
+	if user is not None:
+		auth.login(request, user)
+		return HttpResponseRedirect('/accounts/loggedin')
+	else:
+		return HttpResponseRedirect('/accounts/invalid')
+def loggedin(request):
+	return render_to_response('orderbox/loggedin.html',
+							 {'full_name': request.user.username})
+def invalid_login(request):
+	return render_to_response('orderbox/invalid_login.html')
+def logout(request):
+	auth.logout(request)
+	return render_to_response('orderbox/logout.html')
+
+# Для фильтрации запросов
 # queryset = Order.objects.filter(color='white')
-#Изменения на 18:
+# Изменения на 18:
 # ModelViewSet
 # Полный режим бех удаления:
 # class OrderViewSet(mixins.CreateModelMixin,
