@@ -6,6 +6,8 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
+#Registration
+from .forms import MyRegistrationForm
 
 from .models import Order
 from .serializers import OrderSerializer
@@ -84,6 +86,26 @@ def invalid_login(request):
 def logout(request):
 	auth.logout(request)
 	return render_to_response('orderbox/logout.html')
+def register_user(request):
+    if request.method == 'POST':
+        form = MyRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/accounts/register_success')
+        
+    else:
+        form = MyRegistrationForm()
+    args = {}
+    args.update(csrf(request))
+    
+    args['form'] = form
+    
+    return render_to_response('orderbox/register.html', args)
+
+def register_success(request):
+    return render_to_response('orderbox/register_success.html')
+    
+ 
 
 # Для фильтрации запросов
 # queryset = Order.objects.filter(color='white')

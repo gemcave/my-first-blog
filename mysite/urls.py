@@ -4,6 +4,7 @@ from django.contrib import admin
 from .routers import router
 
 urlpatterns = [
+	#Api and main urls
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(router.urls)),
     url(r'^api/(?P<pk>[0-9]+)/', include(router.urls)),
@@ -14,4 +15,6 @@ urlpatterns = [
     url(r'^accounts/logout/$', 'orderbox.views.logout'),
     url(r'^accounts/loggedin/$', 'orderbox.views.loggedin'),
     url(r'^accounts/invalid/$', 'orderbox.views.invalid_login'),
+    url(r'^accounts/register/$', 'orderbox.views.register_user'),
+    url(r'^accounts/register_success/$', 'orderbox.views.register_success'),
 ]

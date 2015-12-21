@@ -1,0 +1,22 @@
+{% extends "orderbox/base.html" %}
+
+{% block content %}
+  
+  <h2>Регистрация</h2>
+  
+  {% for field in form %}
+    {{field.error}}
+
+  {% endfor %}
+  
+  <form action="/accounts/register/" method="post">{% csrf_token %}
+  
+  {{form}}
+  
+  
+  
+  <br/><input type="submit" value="Зарегистрироваться" />
+    
+  </form>
+  
+{% endblock %}
