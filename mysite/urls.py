@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^accounts/register_success/$', 'orderbox.views.register_success'),
     #Token auth
     url(r'^token-auth/$', 'rest_framework.authtoken.views.obtain_auth_token'),
+    # url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]

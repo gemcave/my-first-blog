@@ -17,7 +17,8 @@ from .forms import OrderForm
 from django.shortcuts import redirect
 # from mysite.permissions import IsOwnerOrReadOnly
 from mysite.permissions import IsOwner
-
+#oauth2_provider
+from oauth2_provider.ext.rest_framework import TokenHasReadWriteScope, TokenHasScope
 # class OrderMixin(object):
 #     queryset = Order.objects.all()
 #     serializer_class = OrderSerializer
