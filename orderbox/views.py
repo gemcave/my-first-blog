@@ -15,20 +15,32 @@ from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
 from .forms import OrderForm
 from django.shortcuts import redirect
-from mysite.permissions import IsOwnerOrReadOnly
+# from mysite.permissions import IsOwnerOrReadOnly
+from mysite.permissions import IsOwner
 
-class OrderMixin(object):
+# class OrderMixin(object):
+#     queryset = Order.objects.all()
+#     serializer_class = OrderSerializer
+#     permission_classes = (IsOwnerOrReadOnly,)
+
+#     def pre_save(self, obj):
+#         obj.owner = self.request.user
+class OrderViewSet(ModelViewSet):
+    # AllowAny - доступ всем
+    # IsAuthenticated - лишь авторизованным
+    # IsAuthenticatedOrReadOnly - только чтение
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+    lookup_field = 'id'
+    permission_classes = (IsOwner,)
 
-    def pre_save(self, obj):
-        obj.owner = self.request.user
-
-class OrderViewSet(OrderMixin, ModelViewSet):
-	pass
-	# queryset = Order.objects.all()
-	# serializer_class = OrderSerializer
+    def get_queryset(self):
+        queryset = self.queryset.filter(author = self.request.user)
+        return queryset
+    
+    def list(self,request,*args,**kwargs):
+        print (request.user)
+        return super(OrderViewSet,self).list(request,*args,**kwargs)
 
 def order_list(request):
     orders_posts = Order.objects.filter(created_date__lte=timezone.now()).order_by('created_date')

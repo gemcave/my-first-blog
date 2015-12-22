@@ -17,4 +17,6 @@ urlpatterns = [
     url(r'^accounts/invalid/$', 'orderbox.views.invalid_login'),
     url(r'^accounts/register/$', 'orderbox.views.register_user'),
     url(r'^accounts/register_success/$', 'orderbox.views.register_success'),
+    #Token auth
+    url(r'^token-auth/$', 'rest_framework.authtoken.views.obtain_auth_token'),
 ]

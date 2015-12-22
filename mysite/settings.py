@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.9/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
+# -*- coding: utf-8 -*-
 # coding: utf-8
 import os
 
@@ -25,7 +26,7 @@ SECRET_KEY = '2hw13+&k8p#kcz(d^1a0lk_at(9$c*azx#r(_r5wklnion6(f&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'orderbox',
     'rest_framework',
+    'rest_framework.authtoken',
+    'oauth2_provider',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -124,3 +127,14 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
+
+REST_FRAMEWORK = {
+  # Глобальная проверка на вход
+  # 'DEFAULT_PERMISSION_CLASSES': (
+  #   'rest_framework.permissions.IsAuthenticated',
+  # )
+  'DEFAULT_PERMISSION_CLASSES': (
+    'rest_framework.authentication.SessionAuthentication',
+    'rest_framework.authentication.TokenAuthentication'
+    )
+}
