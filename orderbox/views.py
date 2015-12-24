@@ -6,6 +6,11 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
+from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import ParseError
+from rest_framework import status
+ 
+from django.contrib.auth.models import User
 #Registration
 from .forms import MyRegistrationForm
 
@@ -15,10 +20,14 @@ from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
 from .forms import OrderForm
 from django.shortcuts import redirect
+#Oauth Toolkit
+from rest_framework import generics
+from .serializers import SignUpSerializer
+from .serializers import LogInSerializer
 # from mysite.permissions import IsOwnerOrReadOnly
-from mysite.permissions import IsOwner
-#oauth2_provider
-from oauth2_provider.ext.rest_framework import TokenHasReadWriteScope, TokenHasScope
+# from mysite.permissions import IsOwner
+from mysite.permissions import IsAuthenticatedOrCreate
+
 # class OrderMixin(object):
 #     queryset = Order.objects.all()
 #     serializer_class = OrderSerializer
@@ -33,7 +42,7 @@ class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     lookup_field = 'id'
-    permission_classes = (IsOwner,)
+    permission_classes = (IsAuthenticatedOrCreate,)
 
     def get_queryset(self):
         queryset = self.queryset.filter(author = self.request.user)
@@ -42,6 +51,15 @@ class OrderViewSet(ModelViewSet):
     def list(self,request,*args,**kwargs):
         print (request.user)
         return super(OrderViewSet,self).list(request,*args,**kwargs)
+
+class SignUp(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = SignUpSerializer
+    permission_classes = (IsAuthenticatedOrCreate,)
+class LogIn(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = LogInSerializer
+    permission_classes = (IsAuthenticatedOrCreate,)
 
 def order_list(request):
     orders_posts = Order.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
